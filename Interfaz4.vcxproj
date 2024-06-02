@@ -120,11 +120,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="login.cpp" />
+    <ClCompile Include="Enfermero.cpp" />
+    <ClCompile Include="Medico.cpp" />
+    <ClCompile Include="Registrarse.cpp" />
     <ClCompile Include="ventanaPrincipal.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="login.h">
+    <ClInclude Include="Enfermero.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Medico.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Registrarse.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="ventanaPrincipal.h">
@@ -132,6 +140,15 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Enfermero.resx">
+      <DependentUpon>Enfermero.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Medico.resx">
+      <DependentUpon>Medico.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registrarse.resx">
+      <DependentUpon>Registrarse.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ventanaPrincipal.resx">
       <DependentUpon>ventanaPrincipal.h</DependentUpon>
     </EmbeddedResource>

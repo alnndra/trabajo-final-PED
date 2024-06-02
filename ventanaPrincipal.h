@@ -1,5 +1,14 @@
 #pragma once
-#include "login.h"
+
+#include "Enfermero.h"
+#include "Medico.h"
+#include "Registrarse.h"
+#include <unordered_map>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <msclr\marshal_cppstd.h>
+#include <cliext\map>
 
 namespace Interfaz4 {
 
@@ -9,87 +18,58 @@ namespace Interfaz4 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Collections::Generic;
+	using namespace System::IO;
+	using namespace msclr::interop;
 
-	/// <summary>
-	/// Resumen de ventanaPrincipal
-	/// </summary>
 	public ref class ventanaPrincipal : public System::Windows::Forms::Form
 	{
+	private:
+		Dictionary<String^, String^>^ usuariosMedicos;
+		Dictionary<String^, String^>^ usuariosEnfermeros;
+
 	public:
 		ventanaPrincipal(void)
 		{
 			InitializeComponent();
-			
 			//
-			//TODO: agregar código de constructor aquí
+			//TODO: Add the constructor code here
 			//
+
+			// Initialize the dictionaries
+			usuariosMedicos = gcnew Dictionary<String^, String^>();
+			usuariosEnfermeros = gcnew Dictionary<String^, String^>();
+
+			// Load users from files
+			CargarUsuarios("usuariosMedicos.txt", usuariosMedicos);
+			CargarUsuarios("usuariosEnfermeros.txt", usuariosEnfermeros);
 		}
-
-	protected:
-		/// <summary>
-		/// Limpiar los recursos que se estén usando.
-		/// </summary>
-		~ventanaPrincipal()
-		{
-			if (components)
-			{
-				delete components;
-			}
-		}
-	private: System::Windows::Forms::Label^ Ib1;
-	private: System::Windows::Forms::TextBox^ tbUsuario;
-	private: System::Windows::Forms::Button^ bLimpiar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	private: System::Windows::Forms::Button^ bIngresar;
-
-
-	private: System::Windows::Forms::Label^ User;
-	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::TextBox^ tbContrasena;
-
-
-
-	private: System::Windows::Forms::LinkLabel^ linkLabel1;
-	private: System::Windows::Forms::Button^ Registrate;
-
-	private: System::Windows::Forms::Label^ Pregunta1;
-	private: System::Windows::Forms::GroupBox^ groupBox1;
-
-
-	protected:
-
-	protected:
 
 	private:
-		/// <summary>
-		/// Variable del diseñador necesaria.
-		/// </summary>
-		System::ComponentModel::Container ^components;
+		Dictionary<String^, String^>^ usuarios;
+
+		System::Windows::Forms::Label^ Ib1;
+		System::Windows::Forms::TextBox^ tbUsuario;
+		System::Windows::Forms::Button^ bLimpiar;
+		System::Windows::Forms::Button^ btn_enfermera;
+		System::Windows::Forms::Label^ User;
+		System::Windows::Forms::Label^ label2;
+		System::Windows::Forms::TextBox^ tbContrasena;
+		System::Windows::Forms::LinkLabel^ linkLabel1;
+		System::Windows::Forms::Button^ Registrate;
+		System::Windows::Forms::Label^ Pregunta1;
+		System::Windows::Forms::GroupBox^ groupBox1;
+		System::Windows::Forms::Button^ btn_medico;
+
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Método necesario para admitir el Diseñador. No se puede modificar
-		/// el contenido de este método con el editor de código.
-		/// </summary>
 		void InitializeComponent(void)
 		{
 			this->Ib1 = (gcnew System::Windows::Forms::Label());
 			this->tbUsuario = (gcnew System::Windows::Forms::TextBox());
 			this->bLimpiar = (gcnew System::Windows::Forms::Button());
-			this->bIngresar = (gcnew System::Windows::Forms::Button());
+			this->btn_enfermera = (gcnew System::Windows::Forms::Button());
 			this->User = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->tbContrasena = (gcnew System::Windows::Forms::TextBox());
@@ -97,6 +77,8 @@ namespace Interfaz4 {
 			this->Registrate = (gcnew System::Windows::Forms::Button());
 			this->Pregunta1 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->btn_medico = (gcnew System::Windows::Forms::Button());
+			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// Ib1
@@ -121,7 +103,7 @@ namespace Interfaz4 {
 			// bLimpiar
 			// 
 			this->bLimpiar->AccessibleName = L"bLimpiar";
-			this->bLimpiar->Location = System::Drawing::Point(103, 151);
+			this->bLimpiar->Location = System::Drawing::Point(163, 191);
 			this->bLimpiar->Name = L"bLimpiar";
 			this->bLimpiar->Size = System::Drawing::Size(75, 23);
 			this->bLimpiar->TabIndex = 2;
@@ -129,15 +111,15 @@ namespace Interfaz4 {
 			this->bLimpiar->UseVisualStyleBackColor = true;
 			this->bLimpiar->Click += gcnew System::EventHandler(this, &ventanaPrincipal::button1_Click);
 			// 
-			// bIngresar
+			// btn_enfermera
 			// 
-			this->bIngresar->Location = System::Drawing::Point(216, 151);
-			this->bIngresar->Name = L"bIngresar";
-			this->bIngresar->Size = System::Drawing::Size(75, 23);
-			this->bIngresar->TabIndex = 5;
-			this->bIngresar->Text = L"Ingresar";
-			this->bIngresar->UseVisualStyleBackColor = true;
-			this->bIngresar->Click += gcnew System::EventHandler(this, &ventanaPrincipal::bVerificar_Click);
+			this->btn_enfermera->Location = System::Drawing::Point(244, 151);
+			this->btn_enfermera->Name = L"btn_enfermera";
+			this->btn_enfermera->Size = System::Drawing::Size(75, 23);
+			this->btn_enfermera->TabIndex = 5;
+			this->btn_enfermera->Text = L"Enfermera";
+			this->btn_enfermera->UseVisualStyleBackColor = true;
+			this->btn_enfermera->Click += gcnew System::EventHandler(this, &ventanaPrincipal::bVerificar_Enfermero);
 			// 
 			// User
 			// 
@@ -176,98 +158,151 @@ namespace Interfaz4 {
 			// 
 			// Registrate
 			// 
-			this->Registrate->Location = System::Drawing::Point(517, 151);
+			this->Registrate->Location = System::Drawing::Point(514, 151);
 			this->Registrate->Name = L"Registrate";
 			this->Registrate->Size = System::Drawing::Size(75, 23);
 			this->Registrate->TabIndex = 11;
 			this->Registrate->Text = L"Registrate";
 			this->Registrate->UseVisualStyleBackColor = true;
+			this->Registrate->Click += gcnew System::EventHandler(this, &ventanaPrincipal::Registrate_Click);
 			// 
 			// Pregunta1
 			// 
 			this->Pregunta1->AutoSize = true;
-			this->Pregunta1->Location = System::Drawing::Point(367, 156);
+			this->Pregunta1->Location = System::Drawing::Point(364, 156);
 			this->Pregunta1->Name = L"Pregunta1";
 			this->Pregunta1->Size = System::Drawing::Size(125, 13);
 			this->Pregunta1->TabIndex = 12;
-			this->Pregunta1->Text = L"¿Aún no esta registrado\?";
+			this->Pregunta1->Text = L"¿Aún no está registrado?";
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Location = System::Drawing::Point(26, 41);
+			this->groupBox1->Controls->Add
+			(this->btn_medico);
+			this->groupBox1->Controls->Add(this->bLimpiar);
+			this->groupBox1->Controls->Add(this->Pregunta1);
+			this->groupBox1->Controls->Add(this->btn_enfermera);
+			this->groupBox1->Controls->Add(this->Registrate);
+			this->groupBox1->Controls->Add(this->tbUsuario);
+			this->groupBox1->Controls->Add(this->User);
+			this->groupBox1->Controls->Add(this->label2);
+			this->groupBox1->Controls->Add(this->tbContrasena);
+			this->groupBox1->Location = System::Drawing::Point(72, 68);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(594, 201);
+			this->groupBox1->Size = System::Drawing::Size(653, 220);
 			this->groupBox1->TabIndex = 13;
 			this->groupBox1->TabStop = false;
-			this->groupBox1->Text = L"Ingrese los datos solicitados: ";
-			this->groupBox1->Enter += gcnew System::EventHandler(this, &ventanaPrincipal::groupBox1_Enter);
+			this->groupBox1->Text = L"Inicio de Sesion";
+			// 
+			// btn_medico
+			// 
+			this->btn_medico->Location = System::Drawing::Point(85, 151);
+			this->btn_medico->Name = L"btn_medico";
+			this->btn_medico->Size = System::Drawing::Size(75, 23);
+			this->btn_medico->TabIndex = 13;
+			this->btn_medico->Text = L"Médico";
+			this->btn_medico->UseVisualStyleBackColor = true;
+			this->btn_medico->Click += gcnew System::EventHandler(this, &ventanaPrincipal::bVerificar_Medico);
 			// 
 			// ventanaPrincipal
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(641, 261);
-			this->Controls->Add(this->Pregunta1);
-			this->Controls->Add(this->Registrate);
-			this->Controls->Add(this->linkLabel1);
-			this->Controls->Add(this->tbContrasena);
-			this->Controls->Add(this->label2);
-			this->Controls->Add(this->User);
-			this->Controls->Add(this->bIngresar);
-			this->Controls->Add(this->bLimpiar);
-			this->Controls->Add(this->tbUsuario);
-			this->Controls->Add(this->Ib1);
+			this->ClientSize = System::Drawing::Size(753, 352);
 			this->Controls->Add(this->groupBox1);
+			this->Controls->Add(this->linkLabel1);
+			this->Controls->Add(this->Ib1);
 			this->Name = L"ventanaPrincipal";
-			this->Text = L"ventanaPrincipal";
+			this->Text = L"Form1";
+			this->Load += gcnew System::EventHandler(this, &ventanaPrincipal::ventanaPrincipal_Load);
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
-
 #pragma endregion
+
+	private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
 	private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-		
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-    // Limpiar los campos de texto
-    tbUsuario->Text = "";
-    tbContrasena->Text = "";
-}
-
-	private: System::Void ingresarComoEnfermeroToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		tbUsuario->Clear();
+		tbContrasena->Clear();
 	}
-private: System::Void ingresarComoMédicoToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void medicoToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void medicoToolStripMenuItem1_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void enfermeroToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void bVerificar_Click(System::Object^ sender, System::EventArgs^ e) {
-	String^ usuario = tbUsuario->Text;
-	String^ contrasena = tbContrasena->Text;
+	private: System::Void Registrate_Click(System::Object^ sender, System::EventArgs^ e) {
+		Registrarse^ registroForm = gcnew Registrarse();
+		registroForm->ShowDialog();
 
-	// Validar el usuario
-	if (usuario=="Fab" && contrasena == "123") {
-		// Usuario válido, abrir la ventana de login
-		login^ log = gcnew login();
-		log->Show();
-	}
-	else {
-		// Usuario no válido, mostrar un mensaje de error o tomar otra acción
-		MessageBox::Show("Usuario o contraseña incorrectos");
+		// Add user to appropriate dictionary and save to file
+		String^ user = registroForm->getUsuario();
+		String^ pass = registroForm->getContrasena();
+		if (!String::IsNullOrEmpty(user) && !String::IsNullOrEmpty(pass))
+		{
+			if (registroForm->getEsMedico()) { // Cambiar aquí
+				usuariosMedicos->Add(user, pass);
+				GuardarUsuario("usuariosMedicos.txt", user, pass);
+			}
+			else if (registroForm->getEsEnfermero()) { // Cambiar aquí
+				usuariosEnfermeros->Add(user, pass);
+				GuardarUsuario("usuariosEnfermeros.txt", user, pass);
+			}
+		}
 	}
 
+
+
+	private: System::Void bVerificar_Medico(System::Object^ sender, System::EventArgs^ e) {
+		String^ user = tbUsuario->Text;
+		String^ pass = tbContrasena->Text;
+		if (!String::IsNullOrEmpty(user) && !String::IsNullOrEmpty(pass) && usuariosMedicos->ContainsKey(user) && usuariosMedicos[user] == pass)
+		{
+			Medico^ form = gcnew Medico();
+			form->Show();
+		}
+		else
+		{
+			MessageBox::Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
+	}
+	private: System::Void bVerificar_Enfermero(System::Object^ sender, System::EventArgs^ e) {
+		String^ user = tbUsuario->Text;
+		String^ pass = tbContrasena->Text;
+		if (!String::IsNullOrEmpty(user) && !String::IsNullOrEmpty(pass) && usuariosEnfermeros->ContainsKey(user) && usuariosEnfermeros[user] == pass)
+		{
+			Enfermero^ form = gcnew Enfermero();
+			form->Show();
+		}
+		else
+		{
+			MessageBox::Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
+	}
+	private: System::Void linkLabel1_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {
+	}
+	private: System::Void ventanaPrincipal_Load(System::Object^ sender, System::EventArgs^ e) {
+	}
+
+	private: System::Void CargarUsuarios(String^ archivo, Dictionary<String^, String^>^ usuarios) {
+		if (File::Exists(archivo)) {
+			StreamReader^ sr = gcnew StreamReader(archivo);
+			String^ line;
+			while ((line = sr->ReadLine()) != nullptr) {
+				array<String^>^ parts = line->Split(',');
+				if (parts->Length == 2) {
+					usuarios->Add(parts[0], parts[1]);
+				}
+			}
+			sr->Close();
+		}
+	}
+
+		   void GuardarUsuario(String^ archivo, String^ usuario, String^ contrasena) {
+			   StreamWriter^ sw = gcnew StreamWriter(archivo, true);
+			   sw->WriteLine(usuario + "," + contrasena);
+			   sw->Close();
+		   }
+	};
 }
-private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void linkLabel1_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {
-}
-private: System::Void groupBox1_Enter(System::Object^ sender, System::EventArgs^ e) {
-}
-};
-}
+
