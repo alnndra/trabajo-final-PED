@@ -144,6 +144,7 @@ namespace Interfaz4 {
 			// 
 			this->tbContrasena->Location = System::Drawing::Point(124, 107);
 			this->tbContrasena->Name = L"tbContrasena";
+			this->tbContrasena->PasswordChar = '*';
 			this->tbContrasena->Size = System::Drawing::Size(181, 20);
 			this->tbContrasena->TabIndex = 9;
 			// 
@@ -173,12 +174,11 @@ namespace Interfaz4 {
 			this->Pregunta1->Name = L"Pregunta1";
 			this->Pregunta1->Size = System::Drawing::Size(125, 13);
 			this->Pregunta1->TabIndex = 12;
-			this->Pregunta1->Text = L"¿Aún no está registrado?";
+			this->Pregunta1->Text = L"¿Aún no está registrado\?";
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add
-			(this->btn_medico);
+			this->groupBox1->Controls->Add(this->btn_medico);
 			this->groupBox1->Controls->Add(this->bLimpiar);
 			this->groupBox1->Controls->Add(this->Pregunta1);
 			this->groupBox1->Controls->Add(this->btn_enfermera);
@@ -235,21 +235,42 @@ namespace Interfaz4 {
 		Registrarse^ registroForm = gcnew Registrarse();
 		registroForm->ShowDialog();
 
-		// Add user to appropriate dictionary and save to file
-		String^ user = registroForm->getUsuario();
-		String^ pass = registroForm->getContrasena();
-		if (!String::IsNullOrEmpty(user) && !String::IsNullOrEmpty(pass))
-		{
-			if (registroForm->getEsMedico()) { // Cambiar aquí
-				usuariosMedicos->Add(user, pass);
-				GuardarUsuario("usuariosMedicos.txt", user, pass);
+		// Verificar si el formulario se cerró correctamente
+		if (registroForm->DialogResult == System::Windows::Forms::DialogResult::OK) {
+			// Obtener el usuario y la contraseña del formulario de registro
+			String^ user = registroForm->getUsuario();
+			String^ pass = registroForm->getContrasena();
+
+			// Verificar que el usuario y la contraseña no estén vacíos
+			if (!String::IsNullOrEmpty(user) && !String::IsNullOrEmpty(pass))
+			{
+				// Mostrar mensaje de depuración
+				MessageBox::Show("Registrando usuario: " + user + ", Contraseña: " + pass, "Mensaje de Depuración");
+
+				if (registroForm->getEsMedico()) {
+					// Agregar usuario médico
+					usuariosMedicos->Add(user, pass);
+					// Guardar usuario médico en el archivo
+					GuardarUsuario("usuariosMedicos.txt", user, pass);
+				}
+				else if (registroForm->getEsEnfermero()) {
+					// Agregar usuario enfermero
+					usuariosEnfermeros->Add(user, pass);
+					// Guardar usuario enfermero en el archivo
+					GuardarUsuario("usuariosEnfermeros.txt", user, pass);
+				}
+				// Mostrar mensaje de éxito
+				MessageBox::Show("Usuario registrado exitosamente.", "Registro Exitoso");
 			}
-			else if (registroForm->getEsEnfermero()) { // Cambiar aquí
-				usuariosEnfermeros->Add(user, pass);
-				GuardarUsuario("usuariosEnfermeros.txt", user, pass);
+			else {
+				// Mostrar mensaje de error si el usuario o la contraseña están vacíos
+				MessageBox::Show("El usuario y la contraseña son obligatorios.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 			}
 		}
+		// Cerrar el formulario de registro
+		registroForm->Close();
 	}
+
 
 
 

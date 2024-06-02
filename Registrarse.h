@@ -165,16 +165,70 @@ namespace Interfaz4 {
 #pragma endregion
 
 	private: System::Void btn_registrarmedico_Click(System::Object^ sender, System::EventArgs^ e) {
+		// Obtener el usuario y la contraseña ingresados
 		usuario = txtb_regusuario->Text;
 		contrasena = txtb_regpassword->Text;
-		esMedico = true; // Establecer esMedico en true al hacer clic en el botón de médico
-		this->Close();
+
+		// Verificar la longitud de la contraseña
+		if (contrasena->Length < 6) {
+			// Mostrar un mensaje de error
+			MessageBox::Show("La contraseña debe tener al menos 6 caracteres.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			// Limpiar el cuadro de texto de contraseña
+			txtb_regpassword->Text = "";
+			// Devolver el foco al cuadro de texto de contraseña para que el usuario pueda corregir
+			txtb_regpassword->Focus();
+			return;
+		}
+
+		// Verificar si la contraseña contiene solo números
+		for each (Char c in contrasena) {
+			if (!Char::IsDigit(c)) {
+				// Mostrar un mensaje de error
+				MessageBox::Show("La contraseña debe contener solo números.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				// Limpiar el cuadro de texto de contraseña
+				txtb_regpassword->Text = "";
+				// Devolver el foco al cuadro de texto de contraseña para que el usuario pueda corregir
+				txtb_regpassword->Focus();
+				return;
+			}
+		}
+
+		// Si la contraseña pasa las validaciones, establecer esMedico en true y cerrar el formulario
+		esMedico = true;
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 	}
 	private: System::Void btn_registrarenfermero_Click(System::Object^ sender, System::EventArgs^ e) {
+		// Obtener el usuario y la contraseña ingresados
 		usuario = txtb_regusuario->Text;
 		contrasena = txtb_regpassword->Text;
-		esEnfermero = true; // Establecer esEnfermero en true al hacer clic en el botón de enfermero
-		this->Close();
+
+		// Verificar la longitud de la contraseña
+		if (contrasena->Length < 6) {
+			// Mostrar un mensaje de error
+			MessageBox::Show("La contraseña debe tener al menos 6 caracteres.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			// Limpiar el cuadro de texto de contraseña
+			txtb_regpassword->Text = "";
+			// Devolver el foco al cuadro de texto de contraseña para que el usuario pueda corregir
+			txtb_regpassword->Focus();
+			return;
+		}
+
+		// Verificar si la contraseña contiene solo números
+		for each (Char c in contrasena) {
+			if (!Char::IsDigit(c)) {
+				// Mostrar un mensaje de error
+				MessageBox::Show("La contraseña debe contener solo números.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				// Limpiar el cuadro de texto de contraseña
+				txtb_regpassword->Text = "";
+				// Devolver el foco al cuadro de texto de contraseña para que el usuario pueda corregir
+				txtb_regpassword->Focus();
+				return;
+			}
+		}
+
+		// Si la contraseña pasa las validaciones, establecer esEnfermero en true y cerrar el formulario
+		esEnfermero = true;
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 	}
 	public: String^ getUsuario() {
 		return usuario;
@@ -185,6 +239,7 @@ namespace Interfaz4 {
 	private: System::Void txtb_regusuario_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void txtb_regpassword_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+
 	}
 	private: System::Void Registrarse_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
