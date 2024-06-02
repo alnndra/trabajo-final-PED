@@ -27,6 +27,7 @@ namespace Interfaz4 {
 	private:
 		Dictionary<String^, String^>^ usuariosMedicos;
 		Dictionary<String^, String^>^ usuariosEnfermeros;
+		Registrarse^ registroForm;
 
 	public:
 		ventanaPrincipal(void)
@@ -43,6 +44,7 @@ namespace Interfaz4 {
 			// Load users from files
 			CargarUsuarios("usuariosMedicos.txt", usuariosMedicos);
 			CargarUsuarios("usuariosEnfermeros.txt", usuariosEnfermeros);
+
 		}
 
 	private:
@@ -303,6 +305,8 @@ namespace Interfaz4 {
 	private: System::Void linkLabel1_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {
 	}
 	private: System::Void ventanaPrincipal_Load(System::Object^ sender, System::EventArgs^ e) {
+		// Suscribe al evento Click del botón Registrate al método Registrate_Click
+		this->Registrate->Click += gcnew System::EventHandler(this, &ventanaPrincipal::Registrate_Click);
 	}
 
 	private: System::Void CargarUsuarios(String^ archivo, Dictionary<String^, String^>^ usuarios) {
@@ -323,6 +327,12 @@ namespace Interfaz4 {
 			   StreamWriter^ sw = gcnew StreamWriter(archivo, true);
 			   sw->WriteLine(usuario + "," + contrasena);
 			   sw->Close();
+		   }
+		   private: System::Void ventanaPrincipal_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+			   // Cerrar el formulario de registro si aún está abierto
+			   if (registroForm != nullptr && !registroForm->IsDisposed) {
+				   registroForm->Close();
+			   }
 		   }
 	};
 }
