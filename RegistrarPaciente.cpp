@@ -1,0 +1,2 @@
+#include "RegistrarPaciente.h"
+
